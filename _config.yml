@@ -14,9 +14,9 @@ timezone:
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Chirpy # the main title
+title: Bora aprender!?!? # the main title
 
-tagline: A text-focused Jekyll theme # it will display as the subtitle
+tagline: Lugar onde tento trazer com palavras mais simples o que eu tive dificuldade de compreender. # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
@@ -38,11 +38,11 @@ social:
   email: rafaelfernandessilva@gmail.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username # change to your Twitter homepage
+    # - https://twitter.com/username # change to your Twitter homepage
+    - https://www.linkedin.com/in/therafs
     - https://github.com/rafaelfernandessilva # change to your GitHub homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
-    # - https://www.linkedin.com/in/username
 
 # Site Verification Settings
 webmaster_verifications:
