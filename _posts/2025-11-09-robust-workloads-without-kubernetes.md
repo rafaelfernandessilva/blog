@@ -1,6 +1,6 @@
 ---
 title: "Workloads Robustos Sem Kubernetes: Quando o K8s Não é Necessário."
-date: 2025-11-09 12:00:00 +0000
+date: 2025-12-02 12:00:00 +0000
 categories: [devops]
 tags: [kubernetes, devops, arquitetura, containers, workloads]
 image: /assets/img/robust-workloads-without-kubernetes.png
@@ -12,7 +12,7 @@ Neste artigo, mostrarei que você pode ter um workload super robusto, com alta r
 
 Eu conheci pessoas que atenderam clientes que tinham um site estático mega simples, quase uma landing page, em um cluster Kubernetes.
 
-Eu mesmo peguei casos em que o cluster tinha aplicações super simples e de pouco tráfego, um banco de dados, tudo criado sem o mínimo de organização, sem NetPol, sem definição de rollout, containers sem limites definidos, o deployment era feito manualmente alterando o arquivo yaml dentro do cluster, distinção por namespace, e diversas outras boas práticas de organização que deveriam ter.
+Eu mesmo peguei casos em que o cluster tinha aplicações super simples e de pouco tráfego, um banco de dados, tudo criado sem o mínimo de organização, sem NetPol, sem definição de rollout, containers sem limites definidos, o deployment era feito manualmente alterando o arquivo yaml dentro do cluster, sem distinção por namespace, e diversas outras boas práticas de organização que deveriam ter.
 
 Ou seja, acontece o que sempre digo, ***`não é porque está funcionando que está correto`***.
 
@@ -37,7 +37,7 @@ No ECS, temos:
 * **Cluster:** É basicamente um agrupamento lógico de máquinas/instâncias/nós operando para a execução de containers. De forma bem básica, seria isso.
 * **Task Definition:** A Task Definition é como se fosse um blueprint de tudo que será criado. Fazendo um paralelo ao Kubernetes, é como se você estivesse escrevendo o manifesto (YAML) do seu Pod, no qual você define quais containers irão subir, define volume, recursos operacionais (CPU/Memória) que podem ser utilizados, imagem a ser utilizada, e etc.
 * **Task:** A Task é como se fosse o output do que a Task Definition mandou para o Cluster. Ela será o resultado do que você definiu na Task Definition. É como se você desse um `kubectl apply -f meupod.yaml` e o Pod subisse no seu Cluster. A Task é, como se fosse, o seu Pod em execução.
-* **Service:** O Service é o conjunto de Tasks criadas com base no seu Task Definition. E, como vocês aqui são tudo kuberneteiros, é como se fosse o seu Deployment. Nele, você consegue definir estratégia de deployment, o número de Tasks a serem criadas, definições de rede e mais algumas coisinhas.
+* **Service:** O Service é o conjunto de Tasks criadas com base no seu Task Definition. E, como vocês aqui são tudo kuberneteiros, é como se fosse o seu Deployment. Nele, você consegue definir estratégia de rollout, o número de Tasks a serem criadas, definições de rede e mais algumas coisinhas.
 
 ---
 
@@ -89,11 +89,11 @@ Bom, agora nós já vimos que temos vários pontos positivos para se usar ECS em
 No ECS temos vários tipos de rollout que podemos utilizar de forma nativa, são eles:
 
 * Rolling Update
-* Blue/Green (com integração direta com o CodeDeploy)
+* Blue/Green 
 * Linear Deployment 
 * Canary Deployment
 
-Sendo assim, você pode escolher o melhor cenário para a aplicação, pois algumas aplicações o melhor cenário seria o Blue/Green, outras seria o Canary. Então o ECS consegue atender bem a necessidade da sua aplicação. E podemos ter todo um fluxo de GitOps, fazendo com que o github por exemplo seja a fonte da verdade, e sempre que subir um push para branch x ou y todo o fluxo de ci/cd iniciar e realizar a entrega no cluster.
+Sendo assim, você pode escolher o melhor cenário para a aplicação, pois algumas aplicações o melhor cenário seria o Blue/Green, outras seria o Canary. Então o ECS consegue atender bem a necessidade da sua aplicação. E podemos ter todo um fluxo de GitOps, fazendo com que o github por exemplo seja a fonte da verdade, e sempre que subir um push para branch X ou Y todo o fluxo de CI/CD iniciar e realizar a entrega no cluster.
 
 ### E como minhas aplicações se comunicação internamente?
 
@@ -105,12 +105,12 @@ No ECS nos também temos algumas configurações de rede que podem deixar a comu
 ### Escalabilidade
 **Auto Scaling service**
 
-O serviço de autoscaling do ECS também funciona muito bem, nele você pode fazer trigger com base em métricas que são enviadas para o cloudwatch, sendo assim com base nessas métricas você pode expandir o seu serviço adicionando mais tasks a sua aplicação sendo assim conseguindo então suportar aquela demanda requerida no momento, é possível fazer o scaling por schedule, caso você saiba o periodo em que sua aplicação é mais exigida como por exemplo ao rodar determinada cron as 00hrs você pode colocar um autoscaling schedule para aumentar o número de task para X e após determinado horário voltar para Y.
+O serviço de autoscaling do ECS também funciona muito bem, nele você pode fazer trigger com base em métricas que são enviadas para o cloudwatch, sendo assim com base nessas métricas você pode expandir o seu serviço adicionando mais tasks a sua aplicação e então conseguindo então suportar aquela demanda requerida no momento, é possível fazer o scaling por schedule, caso você saiba o periodo em que sua aplicação é mais exigida como por exemplo ao rodar determinada cron as 00hrs você pode colocar um autoscaling schedule para aumentar o número de task para X e após determinado horário voltar para Y.
 
 **Auto scaling group**
 Que ira gerenciar a quantidade de instancias do cluster, nele você ira poder determinar o minimo de instancia do cluster, o valor desejado e também o numero maximo de instancias que aquele cluster pode ter. 
 
-Sendo assim em um cenario que você definiu que o cluster deve ter no minimo 1 instancia, deseja 2 e o maximo 5. Ele ira monitorar para atender essas necessidades, lembrando que o upscaling ira ocorrer com base em metricas defina por você.
+Dessa forma em um cenario que você definiu que o cluster deve ter no minimo 1 instancia, o valor que deseja 2 instancia, e o maximo 5. Ele ira monitorar para atender essas necessidades, lembrando que o upscaling ira ocorrer com base em metricas defina por você.
 
 **Capacity Provider**
 É onde você pode por exemplo balancear para que 90% do sua aplicação suba em instancias spot e os outros 10% em instancia ondemand. Você pode também determinar tipos de instancias diferentes mais adequada para cada aplicação dentro do seu cluster. Por exemplo, eu posso definir que app batatinha suba no capacity com instancia voltara para consumo de cpu, e o app abrobinha suba no capacity com instancias voltadas para consumo de memoria. 
@@ -124,7 +124,12 @@ E com isso creio que chegamos a uma conclusão, que  a decisão entre os dois n�
 
 Muitas vezes, a ferramenta certa é aquela que resolve o seu problema com a menor complexidade e custo operacional possível, e o ECS é muito bom quando se trata disso.
 
-Vou deixar para vocês um pequeno lab no qual temos algumas configurações interessantes. Nesse lab vamos utilizar o github, iremos ter todo um fluxo de pipeline até a entrega de uma aplicação no ECS, colocando alguns testes simples para verificar a nossa imagem enviada para o registry que ira no cluster, vamos ter também alguns testes em nosso código terraform que será responsável por criar esse laboratório para testes.
+Vou deixar para vocês um pequeno lab, totalmente focado para o lado didático no qual temos algumas configurações interessantes. Nesse lab vamos utilizar o github para ter o nosso fluxo GitOps, iremos ter uma pipeline até a entrega de uma aplicação no ECS, colocando alguns testes simples para verificar a nossa imagem enviada para o registry que ira no cluster, vamos ter também alguns testes em nosso código terraform que será responsável por criar esse laboratório.
 
 
-> ### ***Lembrando, isso é apenas para fins de estudo, não pegue o código e coloque em seu ambiente de produção sem antes analisar o cenário do seu workload.***
+> ## ***Lembrando, isso é apenas para fins de estudo, não pegue o código e coloque em seu ambiente de produção sem antes analisar o cenário do seu workload.***
+
+
+### ***Laboratorio:. [Você pode fazer um fork, clonar e brincar com o lab que criei de demonstração.](https://github.com/rafaelfernandessilva/ecs-workload-laboratorio).***
+
+#### *** [https://github.com/rafaelfernandessilva/ecs-workload-laboratorio](https://github.com/rafaelfernandessilva/ecs-workload-laboratorio).***
