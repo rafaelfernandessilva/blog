@@ -1,5 +1,5 @@
 ---
-title: "Workloads Robustos Sem Kubernetes: Quando o K8s Não é Necessário."
+title: "Workloads Robustos Sem Kubernetes: Quando o K8s não é necessário?"
 date: 2025-12-02 12:00:00 +0000
 categories: [devops]
 tags: [kubernetes, devops, arquitetura, containers, workloads]
