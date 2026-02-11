@@ -228,3 +228,13 @@ Agora temos uma imagem mais segura que podemos utilizar em nossa infra estrutura
 Vamos ver que nossa imagem inicial tinha mais 1GB e nossa imagem final tem menos de 20MB.
 
 Com isso acho que já sabemos o basico sobre como melhorar a segurança em nossos contrainer e talvez já podemos dizer se somos o melhor da nossa rua talvez.
+
+
+Referência: 
+- [Site Oficial do Trivy](https://trivy.dev/docs/latest/guide/target/container_image/)
+- [Aqua Vulnerability Database (AVD)](https://avd.aquasec.com/)
+- [Diretório de Imagens Chainguard](https://images.chainguard.dev/)
+- [Docker Scout](https://docs.docker.com/engine/scan/scout/)
+- [SBOM: Software Bill of Materials](https://www.ntia.gov/software-bill-materials)
+- [CVEs: Common Vulnerabilities and Exposures](https://cve.mitre.org/)
+
