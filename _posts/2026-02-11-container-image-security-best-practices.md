@@ -17,7 +17,7 @@ Sei que é estranho falar isso, mas sim as vezes criamos fortalezas com diversas
 
 E é mais ou menos isso que fazemos quando não damos a devida atenção para nossas imagens que colocamos em nossos containers. Devido a isso vamos abordar algumas coisinhas que vão ajudar muito a deixar tudo mais seguro.
 
-### ***O que é Dockerfile e Imagem de Container ?***
+## ***O que é Dockerfile e Imagem de Container ?***
 
 Antes de mais nada vamos entender o que é uma imagem de container e o que é um dockerfile, para que possamos entender melhor o que estamos falando.
 
@@ -36,7 +36,7 @@ Antes de mais nada vamos entender o que é uma imagem de container e o que é um
 * _Configurações e metadados_ = Variaveis de ambiente, portas, comandos de entrada e etc, são configurações passadas para aquela particularidade.
 
 
-### ***Montando nosso dockerfile***
+* ### ***Montando nosso dockerfile***
 
 Agora que sabemos o que basicamente se compoe uma imagem e o que é um dockerfile, vamos criar um exemplo simples para que possamos analisar a segurança da imagem e depois melhorar a mesma.
 
@@ -104,7 +104,7 @@ RUN go build -o main .
 CMD ["./main"]
 ```
 
-### ***Fazendo o build da imagem***
+* ### ***Fazendo o build da imagem***
 
 Com os arquivos da aplicação criado e nosso dockerfile criado, vamos fazer o build da imagem para que possamos analisar a mesma e ver se tem vulnerabilidades e depois melhorar.
 
@@ -124,7 +124,7 @@ Veja que foi feito o build da imagem e podemos ver algumas coisas sobre ela, vam
 
 Veja que uma aplicação super simples ficou com mais de 1gb de tamanho. O que não é tão interessante para esse caso visto que temos muita coisa sem necessidade nessa imagem e como e algo compilado não estamos usando boas pratica e isso não esta diretamente ligado a segurança mas já que estamos otimizando nossa imagem temos que levar isso em consideração.
 
-### ***Realizando scan e detectando vulnerabilidades***
+## ***Realizando scan e detectando vulnerabilidades***
 E para realmente fazer uma analise da segurança da nossa imagem vamos utilizar duas ferramentas extremamente poderosas, que é o docker scout e o trivy.
 
 Ta beleza vamos usar essas ferramentas, mas de onde vem? O que são ? de que se alimentam ?
@@ -179,7 +179,7 @@ Podemos também utilizar o trivy, para analisar a situação da nossa imagem:
 
 Como vimos o resultado não foi muito bom, temos diversas vulnerabilidades de nível CRITICAL, e isso é algo que devemos nos preocupar, pois essas vulnerabilidades podem ser exploradas e comprometer toda a nossa aplicação e infraestrutura.
 
-### ***Otimizando nossa imagem e elimando vulnerabilidades***
+## ***Otimizando nossa imagem e elimando vulnerabilidades***
 
 Para melhorar a segurança da nossa imagem, vamos realizar alguns procedimentos, o primeiro deles é atualizar a versão do golang que estamos utilizando, pois como vimos em ambos os scan tivemos problema com a versão do golang da nossa aplicação então vamos primeiro atualização a mesma pois é uma das coisas indicadas como fix.
 
