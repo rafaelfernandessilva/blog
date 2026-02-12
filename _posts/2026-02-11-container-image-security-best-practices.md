@@ -18,15 +18,16 @@ Sei que é estranho falar isso, mas sim as vezes criamos fortalezas com diversas
 E é mais ou menos isso que fazemos quando não damos a devida atenção para nossas imagens que colocamos em nossos containers. Devido a isso vamos abordar algumas coisinhas que vão ajudar muito a deixar tudo mais seguro.
 
 Primeiro vamos saber os componentes base de uma imagem:
-Imagem base ou a golden image = Seria o S.O minimo ali que você precisa para executar algo
 
-Bibliotecas e Binarios = Executaveis e dependencias essenciais para as coisas acontecerem
+***Imagem base ou a golden image*** = Seria o S.O minimo ali que você precisa para executar algo
 
-Dependencias da aplicação = Pacotes especificos que são exigidos pela aplicação como um npm, pip e etc
+***Bibliotecas e Binarios*** = Executaveis e dependencias essenciais para as coisas acontecerem
 
-Configurações e metadados = Variaveis de ambiente, portas, comandos de entrada e etc, são configurações passadas para aquela particularidade.
+***Dependencias da aplicação*** = Pacotes especificos que são exigidos pela aplicação como um npm, pip e etc
 
-Agora que sabemos o que basicamente se compoe uma imagem vamos ver o que seria uma imagem basica um exemplo simples para que possamos ver na pratica algo.
+***Configurações e metadados*** = Variaveis de ambiente, portas, comandos de entrada e etc, são configurações passadas para aquela particularidade.
+
+Agora que sabemos o que basicamente se compoe uma imagem vamos ver o que seria uma imagem basica, um exemplo simples para que possamos ver na pratica algo.
 
 Vamos criar os seguintes arquivos da nossa aplicação de teste.
 
@@ -100,19 +101,19 @@ Veja que foi feito o build da imagem e podemos ver algumas coisinhas sobre ela, 
 
 ![size image](/assets/img/size_image_2.png)
 
-Veja que uma aplicação super simples ficou com mais de 1gb de tamanho. O que não é tão interessante para esse caso visto que temos muita coisa sem necessidade nessa imagem e como é algo compilado não estamos usando boas pratica é isso não esta diretamente ligado a segurança mas já que estamos otimizando nossa imagem temos que levar isso em consideração.
+Veja que uma aplicação super simples ficou com mais de 1gb de tamanho. O que não é tão interessante para esse caso visto que temos muita coisa sem necessidade nessa imagem e como é algo compilado não estamos usando boas pratica e isso não esta diretamente ligado a segurança mas já que estamos otimizando nossa imagem temos que levar isso em consideração.
 
 ### ***Ferramentas de Análise***
 E para realmente fazer uma analise da segurança da nossa imagem vamos utilizar duas ferramentas extremamente poderosas, que é o docker scout e o trivy.
 
-Ta beleza vamos usar essas ferramentas, mas de onde vem? O que são ? de que se alimentão ?
+Ta beleza vamos usar essas ferramentas, mas de onde vem? O que são ? de que se alimentam ?
 
 ### ***Docker Scout***
 O Docker Scout é uma solução focada na segurança proativa da cadeia de suprimentos de software. Ele funciona analisando imagens de containers para identificar e mitigar vulnerabilidades antes que elas se tornem problemas críticos. As principais funcionalidades são:
 
-*Análise e SBOM:* O Docker Scout analisa suas imagens e compila um inventário detalhado de componentes, chamado de Software Bill of Materials (SBOM).
+***Análise e SBOM:*** O Docker Scout analisa suas imagens e compila um inventário detalhado de componentes, chamado de Software Bill of Materials (SBOM).
 
-*Detecção de Vulnerabilidades:* Esse SBOM é comparado com um banco de dados de vulnerabilidades que é atualizado continuamente, permitindo localizar falhas de segurança específicas nos pacotes e camadas da imagem.
+***Detecção de Vulnerabilidades:*** Esse SBOM é comparado com um banco de dados de vulnerabilidades que é atualizado continuamente, permitindo localizar falhas de segurança específicas nos pacotes e camadas da imagem.
 
 ### ***Trivy***
 
@@ -127,7 +128,7 @@ O Trivy é uma ferramenta de segurança abrangente e versátil, amplamente utili
 
 Agora que conhecemos duas ótimas ferramentas para nos ajudar na segurança da nossa imagem vamos então ver como está a nossa situação.
 
-Vamos primeiro utilizar o docker scout para ver se estamos com muitas vulnerabilidades, para isso partido do principio que temos docker e o docker scout vamos utilizar o comando:
+Vamos primeiro utilizar o docker scout para ver se estamos com muitas vulnerabilidades, para isso partindo do principio que temos docker e o docker scout vamos utilizar o comando:
 
 
 > ***docker scout quickview app-go:1.0***
