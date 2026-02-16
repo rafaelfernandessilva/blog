@@ -14,6 +14,7 @@ ___
 # Criação de architecture decision record
 
 ***ADR-001:*** Implementação de Scan de Vulnerabilidades em Imagens de Container
+
 ***Status:*** Pendente
 
 ***Data:*** 16 de Fevereiro de 2026
