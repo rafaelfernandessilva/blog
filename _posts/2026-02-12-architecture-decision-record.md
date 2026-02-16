@@ -40,13 +40,13 @@ No intuito de analisar e eliminar vulnerabilidades em imagens de container, impl
 
 * ***Notificação***
     - Um alerta automático será enviado via Slack para o time de engenharia responsavel, contendo o log gerado pela ferramenta, detalhando as vulnerabilidades encontradas.
-    - O time de segurança também será ira fazer  parte do suporte.
+    - O time de segurança também ira fazer  parte do suporte.
 
 * ***Analise***
     - Além do sistema operacional da imagem, o scan incluirá bibliotecas de linguagem (npm, pip, etc.),e também Misconfigurations em Dockerfiles.
 
-### 3. ***Consequências***
-* #### ***Positivas***
+### ***3. Consequências***
+#### ***Positivas***
 * ***Redução de risco:***
     - Não permite que imagem com vulnerabilidade chegue em produção ambiente de produção.
 
@@ -55,21 +55,21 @@ No intuito de analisar e eliminar vulnerabilidades em imagens de container, impl
 * ***Analise detalhada:***
     - Criação de um log detalhado das vulnerabilidades encontradas, facilitando a anlise e correção.
 
-* #### ***Negativas***
+#### ***Negativas***
 
 * ***Tempo de execução:***
     - O pipeline tera um tempo maior de execução devido ao processo de scan, o que pode impactar no deployment.
 * ***Adaptação da cultura do time:***
     - Necessário treinamento e adaptação do time de engenharia para lidar com as novas exigências de segurança.
 
-### 4. Alternativas Consideradas
+### ***4. Alternativas Consideradas***
 * ***Testes Manuais***
     - Descartado por ser ineficiente, propenso a falhas humanas e impossível de escalar com a frequência necessária de deploys.
 
 * ***Scan Informativo (Sem Falha)***
     - Descartado pois, embora gere alertas, não impede que a vulnerabilidade seja explorada em produção caso o alerta seja ignorado ou lido tarde demais.
 
-### 5. Próximos Passos
+### ***5. Próximos Passos***
 * ***Configuração:***
     - Criar o de workflow do CI/CD para incluir o passo do Trivy.
 
