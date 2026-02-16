@@ -294,4 +294,3 @@ Referência:
 - [CVEs: Common Vulnerabilities and Exposures](https://cve.mitre.org/)
 - [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 - [Docker CLI](https://docs.docker.com/reference/cli/docker/)
-

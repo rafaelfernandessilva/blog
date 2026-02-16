@@ -76,4 +76,3 @@ No intuito de analisar e eliminar vulnerabilidades em imagens de container, impl
     - Analisar a possibilidade de utilizar cache para otimizar o tempo de execução do scan.
 * ***Alerta:***
     - Definir o canal de destino e o Webhook no Slack para as notificações.
-
