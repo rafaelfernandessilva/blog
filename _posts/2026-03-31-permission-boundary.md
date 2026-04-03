@@ -1,5 +1,5 @@
 ﻿---
-title: "Permissions Boundary (limite de permissões) no IAM"
+title: "Permissions Boundary: O que é e por que utilizar esse modelo de controle no IAM"
 date: 2026-03-31 14:00:00 -0300
 categories: security
 tags: [iam, permission-boundary, aws, devsecops]
@@ -7,22 +7,19 @@ description: "Entenda o modelo de controle Permissions Boundary no IAM e como ap
 image: /assets/img/permission-boundary.png
 ---
 
-
-Aqui está o conteúdo do arquivo formatado em Markdown, com a organização das seções e blocos de código, removendo as marcações de citação conforme solicitado:
-
 ---
 
 ## 1. O que são essas permissions boundaries ?
 
-As permissions boundaries não é uma permissão exatamente citada para determinado usuario mas talvez a melhor forma de definir seria o limite até onde se pode ir. E uma forma de fazer com que em alguns casos dê autonomia a determinadas equipes para criar suas proprias roles no IAM sem que crie algo com usuario Administrator por exemplo.
+As permissions boundaries não é uma permissão exatamente citada para determinado usuario mas talvez a melhor forma de definir seria o limite até onde se pode ir. É uma forma de fazer com que em alguns casos dê autonomia a determinadas equipes para criar suas proprias roles no IAM sem que crie algo com usuario Administrator, por exemplo.
 
-Vamos imaginar que equipe de como por exemplo DevSecOps ou InfraSec tenha por padrão uma policy chamada DevPermissionsBoundary. Esta policy vai permitir permite varias ações em serviços como EC2, S3, DynamoDB,SQS e mas nega explicitamente todas as ações referente ao IAM (iam:*). Em seguida, eles concedem a um desenvolvedor a permissão iam:CreateRole, mas com uma condição em sua política que exige que qualquer role que ele crie deve ter o DevPermissionsBoundary anexado.
+Vamos imaginar que uma equipe de como por exemplo DevSecOps ou InfraSec tenha por padrão uma policy chamada DevPermissionsBoundary, que sempre é aplicada por padrão. Esta policy vai permitir permite varias ações em serviços como EC2, S3, DynamoDB,SQS mas nega explicitamente todas as ações referente ao IAM (iam:*). Em seguida, eles concedem a um desenvolvedor a permissão iam:CreateRole, mas com uma condição em sua política que exige que qualquer role que ele crie deve ter o DevPermissionsBoundary anexado.
 
-O resultado é que o desenvolvedor ganha autonomia para criar roles para suas aplicações conforme necessário, mas é não é permitido criar uma role com  administrator ou de modificar o próprio boundary para escalar seus privilégios.
+O resultado é que o desenvolvedor ganha autonomia para criar roles para suas aplicações conforme necessário, mas  não é permitido criar uma role com  administrator ou de modificar o próprio boundary para escalar seus privilégios.
 
-Isso ocorre por que a role criada ela já nasce com limitações, quem esta criando só consegue criar ela se inserir o boundary o que faz com que permita criar porém a criação ja nasce limitada.
+Isso ocorre por que a role criada ela já nasce com limitações, quem esta criando só consegue criar ela se inserir o boundary, isso faz com que permita criar porém a criação ja nasce limitada.
 
-E como se você fosse um porteiro (desenvolvedor(a)) e tivesse que permitir entrada de alguém da manutenção ao condominio (criar role), porém você não pode simplesmente liberar a entrada do prestador de serviço, se você apenas tentar liberar a entrada ele vai ser barrado, mas o sindico do condominio te deu algumas tags com limite de acesso a alguns lugares, então você da a ele uma tag (boundary), e após isso ele consegue entrar no condominio porém ele já tem sua entrada permitida com determinadas restrições, essa tag permite a ele ter acesso apenas de ir ao bloco A apartamento 203 e bloco B apartamento 501. 
+É como se você fosse um porteiro (desenvolvedor(a)) e tivesse que permitir entrada de alguém da manutenção ao condominio (criar role), porém você não pode simplesmente liberar a entrada do prestador de serviço, se você apenas tentar liberar a entrada ele vai ser barrado, mas o sindico do condominio te deu algumas tags com limite de acesso a alguns lugares, então você da a ele uma tag (boundary), e após isso ele consegue entrar no condominio porém ele já tem sua entrada permitida com determinadas restrições, essa tag permite a ele ter acesso apenas de ir ao bloco A apartamento 203 e bloco B apartamento 501. 
 
 Ou seja você tem a permissão de criar uma role para um determinado serviço ou usuario porém essa role já é criada com as limitações definida pela boundary.
 
@@ -30,19 +27,23 @@ Agora que temos uma ideia vamos saber como realmente funciona a boundary e sua i
 
 Para que a o usuario tenha sucesso na criação/utilização/manipulação de um recurso precisa existir uma combinação validando isso na interseção de permissão.
 
-Vamos para alguns exemplos 
+#### Exemplos:
 
-1 o usuario tem permissão para criar um RDS:
+O usuario tem permissão para criar um RDS:
+```
                 "rds:CreateDBInstance",
+```
 
-mas o permission boundary fixado aquele usuario esta definido que ele tem permissão apenas de listar instancias ec2:
+Mas o permission boundary fixado aquele usuario esta definido que ele tem permissão apenas de listar instancias ec2:
 
+```
                 "ec2:DescribeInstances"
+```
 
 Sendo assim o usuario ao tentar criar um RDS ira tomar um erro, pois a permission boundary define o seu teto de permissões.
 
 ## 2. Funcionamento e Interseção
-De acordo com a documentação da AWS, o funcionamento da interseção de um Permissions Boundary (Limite de Permissões) baseia-se no princípio de que as permissões efetivas de um usuário ou função (role) são apenas as ações permitidas simultaneamente por dois tipos de políticas
+O funcionamento da interseção de um Permissions Boundary baseia-se no princípio de que as permissões efetivas de um usuário ou função (role) são apenas as ações permitidas simultaneamente por dois tipos de políticas.
 
 Para que uma ação seja autorizada, ela deve estar presente tanto na policy/role adicionada ao usuario quanto no teto que seria o permission boundary.
 
@@ -87,7 +88,7 @@ Para que uma ação seja autorizada, ela deve estar presente tanto na policy/rol
 ![Resultado](/assets/img/boundary-ok.png)
 
 
-Se a política de identidade permitir uma ação (ex: iam:CreateUser), mas essa ação não constar no Permissions Boundary, o acesso será negado. O boundary atua como o barreira privilégios
+Se a política de identidade permitir uma ação (ex: iam:CreateUser), mas essa ação não constar no Permissions Boundary, o acesso será negado. O boundary atua como o barreira privilégios.
 
 ***Por exemplo***
 
@@ -128,13 +129,14 @@ Se a política de identidade permitir uma ação (ex: iam:CreateUser), mas essa 
 
 * **Resultado**: O usuário não poderá criar um usuário IAM, pois essa ação não está incluída no Permissions Boundary, mesmo que a política de identidade permita.
 
+
 ---
 
 ## 3. Pontos Importantes
 
-É sempre bom lembrar que o boundary, por si só, não dá permissão ele apenas limita o que outras políticas podem conceder.
+É sempre bom lembrar que o boundary, por si só, não dá permissão ele apenas limita o que outras políticas podem conceder, boundary não nega a criação de um usuario como no ultimo exemplo, mas como ele não deixa explicito que pode ser criado logo já se deduz que ali é o teto de permissões. 
 
-Outro ponto importante é que dentro da AWS um Deny explícito em qualquer uma das políticas envolvidas na interseção sempre vai ter um peso maior sobre qualquer "Allow" se o boundary contiver um Deny (que seria a barreira o tero) para uma ação específica, essa ação será bloqueada, mesmo que o usuario tenha uma role muito permissiva como a AdministratorAccess.
+Outro ponto importante é que dentro da AWS um Deny explícito em qualquer uma das políticas envolvidas na interseção sempre vai ter um peso maior sobre qualquer "Allow" se o boundary contiver um Deny (que seria a barreira ou teto) para uma ação específica, essa ação será bloqueada, mesmo que o usuario tenha uma role muito permissiva como a AdministratorAccess.
 
 #### ***SCP (Service Control Policies)***
 
@@ -146,7 +148,7 @@ E esse tipo de interseção também se extende quando se trata de SCPs (Service 
 #### ***Resource-Based Policies***
 Porém temos um cenario um pouco diferente quando falamos de políticas baseadas em recursos (Resource-Based Policies) como as políticas de bucket S3 ou políticas de fila SQS. Nesses casos, as permissões concedidas por essas políticas também precisam estar na interseção com o Permissions Boundary para que sejam efetivas, mas a forma como isso é aplicado pode variar dependendo do tipo de entidade (usuário ou role) e do serviço específico envolvido. Por exemplo:
 
-Se um bucket esta dizendo que o usuario batatinha tem permissão para ler um objeto, mas o boundary não possui nenhuma negação explicita ou seja não fala que pode e nem que não pode, o usuario tem acesso a leitura daquele objeto dentro do bucket pois no boundary não existe uma negação explicita, ou seja um teto um limite de acesso.
+Se um bucket esta dizendo que o usuario batatinha tem permissão para ler um objeto, mas o boundary não possui nenhuma negação explicita ou seja não fala que pode e nem que não pode, o usuario tem acesso a leitura daquele objeto dentro do bucket pois no boundary não existe uma negação explicita.
 
 Mas quando se trata de roles, funciona de uma forma mais rigorosa, se uma role tem permissão para acessar um recurso por Resource-Based Policy, mas o Permissions Boundary não diz nada sobre acesso ao bucket explicitamente e diz que aquela role tem permissão apenas para acessar o EC2, então a role não terá acesso ao bucket mesmo que a política de recurso permita, pois o boundary atua de uma forma um pouco mais rigida para roles.
 
